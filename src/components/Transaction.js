@@ -10,7 +10,6 @@ export const Transaction = ({ transaction }) => {
     <div>
       <li className={transaction.amount < 0 ? "minus" : "plus"}>
         {transaction.text}
-        Cash{" "}
         <span>
           {sign}${Math.abs(transaction.amount)}
         </span>

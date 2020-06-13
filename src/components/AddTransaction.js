@@ -4,8 +4,9 @@ import { GlobalContext } from "../context/GlobalState";
 export const AddTransaction = () => {
   const [text, setText] = useState("");
   const [amount, setAmount] = useState(0);
+  const [suggestions, setSuggestions] = useState([]);
 
-  const { addTransaction } = useContext(GlobalContext);
+  const { addTransaction, transactions } = useContext(GlobalContext);
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -14,32 +15,52 @@ export const AddTransaction = () => {
       text,
       amount: +amount,
     };
-
+    setText("");
+    setAmount(0);
     addTransaction(newTransaction);
   };
+
+  const loadSuggestions = ({ target: { value } }) => {
+    const regex = new RegExp(`^${value}`, "i");
+    setText(value);
+    const result = value.length
+      ? transactions.filter((v) => regex.test(v.text))
+      : [];
+    setSuggestions(result);
+  };
+
   return (
     <>
-      <h3>Add new transaction</h3>
       <form onSubmit={onSubmit}>
         <div className="form-control">
-          <label htmlFor="text">Text</label>
+          {/* <label htmlFor="text">Text</label> */}
           <input
             type="text"
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            autoCapitalize="off"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck="false"
+            onChange={(e) => {
+              loadSuggestions(e);
+            }}
             id="text"
             placeholder="Enter text..."
           />
+
+          <ul>
+            {suggestions.map((suggestion) => (
+              <li key={suggestion.id}>{suggestion.text}</li>
+            ))}
+          </ul>
         </div>
         <div className="form-control">
-          <label htmlFor="amount">
-            Amount <br />
-            (negative - expense, positive - income)
-          </label>
           <input
             type="number"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) => {
+              setAmount(e.target.value);
+            }}
             placeholder="Enter amount..."
           />
         </div>
