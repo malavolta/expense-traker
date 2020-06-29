@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { GlobalContext } from "../context/GlobalState";
 
+import "./transaction.css";
+
 export const AddTransaction = () => {
   const [text, setText] = useState("");
   const [amount, setAmount] = useState(0);
@@ -37,6 +39,7 @@ export const AddTransaction = () => {
           <input
             type="text"
             value={text}
+            className="text2"
             autoCapitalize="off"
             autoComplete="off"
             autoCorrect="off"
@@ -48,11 +51,17 @@ export const AddTransaction = () => {
             placeholder="Enter text..."
           />
 
-          <ul>
+          <div className="suggestions">
             {suggestions.map((suggestion) => (
-              <li key={suggestion.id}>{suggestion.text}</li>
+              <div
+                className="suggestion h"
+                key={suggestion.id}
+                onClick={() => setText(suggestion.text)}
+              >
+                {suggestion.text}
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
         <div className="form-control">
           <input
